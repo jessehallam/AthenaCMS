@@ -1,0 +1,35 @@
+.mediaLibrary__grid {}
+
+.mediaLibrary__gridList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style-type: none;
+    margin: -10px;
+    padding: 0;
+    width: 100%;
+}
+
+.mediaLibrary__gridItem {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    height: 200px;
+    overflow: hidden;
+    margin: 10px;
+    width: 200px;
+}
+
+.mediaLibrary__gridItemContent {
+    background-position: center;
+    background-size: cover;
+    border-radius: 1.5px;
+    cursor: pointer;
+    height: 100%;
+    transition: .25s ease-in;
+    width: 100%;
+}
+
+.mediaLibrary__gridItem:hover .mediaLibrary__gridItemContent {
+    transform: scale(1.1);
+}

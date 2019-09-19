@@ -1,0 +1,24 @@
+.table {
+    .dropdown-cell {
+        padding: 3px .75rem;
+    }
+
+    .btn-clean {
+        box-shadow: none;
+        height: 32px;
+        outline: 0;
+        padding-bottom: 0;
+        padding-top: 0;
+        width: 32px;
+
+        &:hover {
+            background-color: #f0f3ff;
+        }
+    }
+
+    .btn-icon {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+}

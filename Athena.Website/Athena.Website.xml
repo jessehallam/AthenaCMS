@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Athena.Website</name>
+    </assembly>
+    <members>
+        <member name="M:Athena.Website.Controllers.AuthController.Refresh(Athena.Website.Models.Auth.RefreshModel)">
+            <summary>
+            Exchange a refresh token for a new access token.
+            </summary>
+            <response code="200">Success</response>
+            <response code="409">The refresh token was invalid</response>
+        </member>
+        <member name="M:Athena.Website.Controllers.AuthController.SignIn(Athena.Website.Models.Auth.SignInModel)">
+            <summary>
+            Creates a bearer access token.
+            </summary>
+            <response code="403">The credentials were invalid</response>
+        </member>
+        <member name="M:Athena.Website.Controllers.ContentTypeController.Create(Athena.Website.Models.Content.CreateContentTypeModel)">
+            <summary>
+            Create a content type.
+            </summary>
+            <response code="200">Success</response>
+            <response code="409">There was an error with the request</response>
+        </member>
+        <member name="M:Athena.Website.Controllers.SetupController.SetupAsync(Athena.Website.Models.Setup.SetupModel)">
+            <summary>
+            Performs initial setup of the CMS.
+            </summary>
+            <response code="200">Success</response>
+            <response code="403">Setup is invalid because setup has already been performed</response>
+            <response code="409">Setup was unsuccessful due to one or more errors</response>
+        </member>
+        <member name="M:Athena.Website.Controllers.TaxonomyController.Create(Athena.Website.Models.Taxonomy.CreateTaxonomyTypeModel)">
+            <summary>
+            Create a taxonomy.
+            </summary>
+        </member>
+        <member name="T:Athena.Website.Models.ClientErrorResponse">
+            <summary>
+            Response object for 4xx requests, excepting 404.
+            </summary>
+        </member>
+    </members>
+</doc>

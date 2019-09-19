@@ -1,0 +1,24 @@
+.pluginCard {}
+
+.pluginCard__description {
+    color: #434349;
+}
+
+.pluginCard__details {
+    margin-bottom: .5rem;
+    overflow: auto;
+
+    dt {
+        clear: left;
+        color: #434349;
+        float: left;
+        font-weight: 500;
+        width: 40%;
+    }
+
+    dd {
+        color: #434349;
+        float: left;
+        width: 60%;
+    }
+}

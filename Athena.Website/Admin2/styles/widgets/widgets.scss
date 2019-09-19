@@ -1,0 +1,36 @@
+/* title */
+
+.pagePanel--widget {
+    padding: 1rem;
+
+    .pagePanel__header {
+        margin-bottom: 1.5rem;
+    }
+
+    .pagePanel__footer {
+        margin-top: 1.5rem;
+    }
+}
+
+.titleWidget {
+    padding: 1rem;
+
+    .form-control {
+        font-size: 155%;
+    }
+}
+
+.metaWidget__addPanel {
+    background-color: #f7f9f9;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.taxonomyWidget {
+    .taxonomyWidget__termList {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        padding-left: 1rem;
+    }
+}

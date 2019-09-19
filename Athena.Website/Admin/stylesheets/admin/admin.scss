@@ -1,0 +1,22 @@
+$adminNav-height: 70px;
+
+@import "headerPart";
+@import "nav";
+@import "widget";
+
+.adminPanel__mainContentBox {
+    background-color: #f9f9fc;
+    bottom: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 70px;
+}
+
+.adminPanel__mainContentWrapper {
+    margin: 0 auto;
+    padding: 0 1.75rem;
+    width: 1300px;
+}

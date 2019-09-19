@@ -1,0 +1,67 @@
+.adminHeaderPart {
+    background-color: rgb(24, 24, 24);
+    height: $adminNav-height;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+}
+
+.adminHeaderPart__wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: $adminNav-height;
+    justify-content: space-between;
+    margin: 0 auto;
+    width: 1300px;
+}
+
+.adminHeaderPart__right {
+    display: flex;
+    flex-direction: row;
+    height: $adminNav-height;
+    line-height: $adminNav-height;
+}
+
+.adminHeaderPart__searchWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 1.5rem;
+
+    .input-group {
+        background-color: #252338;
+        border-radius: 4px;
+    }
+
+    .input-group-prepend {
+        background-color: transparent;
+    }
+
+    .input-group-text {
+        background-color: transparent;
+        border: 0;
+    }
+
+    .form-control {
+        background: none;
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        color: #807da1;
+        outline: none;
+        padding: 0;
+        transition: width .2s ease-out;
+        width: 55px;
+
+        &:focus {
+            width: 240px;
+        }
+    }
+}
+
+.adminHeaderPart__username {
+    color: #fff;
+}

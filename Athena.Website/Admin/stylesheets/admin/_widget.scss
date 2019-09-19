@@ -1,0 +1,72 @@
+.titleWidget {
+    .form-control {
+        border: 0;
+        font-weight: 300;
+        font-size: 27px;
+    }
+}
+
+.widgetStatus__commands {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.widgetMeta__addNew {
+    background: #f5f5f5;
+    border: 1px solid #dadada;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.widgetMeta__addActions {
+    margin-top: 1rem;
+}
+
+.widgetMeta__metaWrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.widgetMeta__nameWrapper {
+    flex: 0 0 35%;
+    padding-right: 5px;
+}
+
+.widgetMeta__valueWrapper {
+    flex: 0 1 65%;
+    padding-left: 5px;
+}
+
+.widgetMeta__metaList {
+    list-style: none;
+    margin: 0;
+    padding: 1rem;
+}
+
+.widgetMeta__metaList li + li {
+    margin-top: .5rem;
+}
+
+.widgetMeta__actionWrapper {
+    padding-left: 1rem;
+}
+
+@keyframes widgetMeta__listItem--deleted {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.widgetMeta__listItem {
+    border-radius: 4px;
+}
+
+.widgetMeta__listItem--deleted {
+    animation: widgetMeta__listItem--deleted .7s normal forwards ease;
+}

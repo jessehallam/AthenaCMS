@@ -1,0 +1,31 @@
+.adminHeaderNav__items {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.adminHeaderPart__item {
+    padding: 15px 0;
+}
+
+.admin .adminHeaderNav__link {
+    border-radius: 4px;
+    color: #6c6e86;
+    display: block;
+    font-weight: 500;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 1.75rem;
+    transition: all .3s ease;
+
+    &:hover {
+        background-color: #232337;
+        color: #fff;
+    }
+}
+
+.admin .adminHeaderNav__item--active .adminHeaderNav__link {
+    color: #fff;
+    background-color: transparent !important;
+}

@@ -1,0 +1,64 @@
+200
+---
+Indicates a successful API call. 
+GETs have returned the resource. 
+POSTs have created the resource; the created resource is returned.
+PUTs have updated the resource; the updated resource is returned.
+DELETEs have deleted the resource; an empty response is returned.
+
+400
+---
+Indicates a generic error with a request (client error). Perhaps
+a resource couldn't be created because the name isn't unique.
+An error response is returned:
+
+	{
+		"code": "E_EXAMPLE_ERROR",
+		"description": "An error occurred because of a reason."
+	}
+
+401
+---
+Indicates that a request failed because the client didn't provide
+the necessary credentials. The client either sent a malformed
+JWT token, or no JWT token was provided at all.
+An error response is returned:
+
+	{
+		"code": "E_UNAUTHORIZED",
+		"description": "The request did not provide a valid JWT bearer token."
+	}
+
+403
+---
+Indicates that the request was well-formed, but the provided JWT
+token lacks sufficient access to perform the requested action.
+An error response is returned:
+
+	{
+		"code": "E_FORBIDDEN",
+		"description": "The request provided a JWT bearer token that lacks the necessary access."
+	}
+
+404
+---
+Indicates that the requested URI does not exist.
+
+500
+---
+Indicates that an error occurred while processing the request,
+and the server is responsible.
+An error response is returned:
+
+	( in development )
+	{
+		"code": "E_SERVER_ERROR",
+		"description": "[[ Exception message ]]",
+		"more_info": "[[ Exception stringified ]]"
+	}
+
+	(in production)
+	{
+		"code": "E_SERVER_ERROR",
+		"description": "An internal server error occurred."
+	}
