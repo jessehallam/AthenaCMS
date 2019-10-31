@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { classList } from '../../utility/classList';
 
 interface OwnProps {
+    className?: React.ReactText;
     content?: React.ReactNode;
+    footer?: React.ReactNode;
     subTitle?: React.ReactNode;
     title?: string;
     toolbar?: React.ReactNode;
@@ -11,12 +14,19 @@ interface OwnState {}
 
 export default class PagePanel extends React.Component<OwnProps, OwnState> {
     render() {
+        const classes = classList('pagePanel', this.props.className);
         return (
-            <div className='pagePanel'>
+            <div className={classes}>
                 {this.renderHeader()}
                 <div className='pagePanel__content'>{this.props.content}</div>
+                {this.renderFooter()}
             </div>
         );
+    }
+
+    private renderFooter() {
+        if (!this.props.footer) return null;
+        return <div className='pagePanel__footer'>{this.props.footer}</div>;
     }
 
     private renderHeader() {

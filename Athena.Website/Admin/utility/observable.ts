@@ -1,6 +1,8 @@
-import { set } from 'mobx';
+import { isObservable, set } from 'mobx';
 
-export const assignObservable = <T extends object>(target: T, values: any) => {
-    set(target, values);
-    return target;
-};
+export function assignObservable<T>(dest: T, source: Partial<T>) {
+    if (!isObservable(dest)) throw new Error('Cannot assignObservable to a non-observable object.');
+
+    set(dest, source);
+    return dest;
+}

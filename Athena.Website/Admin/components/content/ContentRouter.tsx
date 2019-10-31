@@ -1,19 +1,15 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import ContentEditorLoader from './contentEditor/ContentEditorLoader';
-import ContentListLoader from './contentList/ContentListLoader';
-import ContentHomeView from './home/ContentHomeView';
+import ContentTypesView from './contentTypes/ContentTypesView';
+import EditorLoader from './editor/EditorLoader';
+import ContentListView from './list/ContentListView';
 
 export default function ContentRouter() {
     return (
         <Switch>
-            <Route
-                exact={true}
-                path='/admin/content/edit/:contentTypeName/:contentId'
-                component={ContentEditorLoader}
-            />
-            <Route exact={true} path='/admin/content' component={ContentHomeView} />
-            <Route exact={true} path='/admin/content/search/:name' component={ContentListLoader} />
+            <Route exact={true} path='/content' component={ContentTypesView} />
+            <Route exact={true} path='/content/:contentTypeName' component={ContentListView} />
+            <Route exact={true} path='/content/:contentTypeName/edit/:contentId' component={EditorLoader} />
         </Switch>
     );
 }

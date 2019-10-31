@@ -5,6 +5,7 @@ interface OwnProps {
     title: React.ReactNode;
     toolbar?: React.ReactNode;
 }
+
 interface OwnState {}
 
 export default class PageHeader extends React.Component<OwnProps, OwnState> {

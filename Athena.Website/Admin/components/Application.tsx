@@ -1,22 +1,20 @@
 import * as React from 'react';
-import Tenant from '../ObjectModel/Tenant';
+import { StoreProps, withStore } from '../stores/withStore';
 import AdminView from './admin/AdminView';
 import LoginView from './login/LoginView';
 
-interface OwnProps {}
+interface OwnProps extends StoreProps {}
 interface OwnState {}
 
 class Application extends React.Component<OwnProps, OwnState> {
-    static readonly tenant: Tenant = new Tenant();
-
     componentDidMount() {
-        /** Trigger an onLoginRequired event to pull up the login view. */
-        Application.tenant.authentication.authenticateAsync();
+        // trigger a login screen if there is no token.
+        this.props.store.authentication.getAccessTokenAsync();
     }
 
     render() {
         return (
-            <div className='admin'>
+            <div className='application'>
                 <AdminView />
                 <LoginView />
             </div>
@@ -24,4 +22,4 @@ class Application extends React.Component<OwnProps, OwnState> {
     }
 }
 
-export default Application;
+export default withStore(Application);

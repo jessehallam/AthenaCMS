@@ -4,13 +4,11 @@ interface OwnProps {}
 interface OwnState {}
 
 export default class ProfileButton extends React.Component<OwnProps, OwnState> {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
-        return (
-            <div className='adminHeaderPart__profileButton'>
-                <div className='adminHeaderPart__user'>
-                    Hello <span className='adminHeaderPart__username'>admin</span>
-                </div>
-            </div>
-        );
+        return <span />;
     }
 }

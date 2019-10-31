@@ -1,53 +1,34 @@
-import { action, observable } from 'mobx';
+import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { Content } from '../../../ObjectModel/content/Content';
-import Application from '../../Application';
+import { IContent } from '../../../stores/interfaces';
 import PageHeader from '../../shared/PageHeader';
-import MediaDetails from './mediaDetails/MediaDetails';
-import MediaDragDropUpload from './MediaDragDropUpload';
+import MediaDetailsView from './details/MediaDetails';
+import MediaDetailsModel from './details/MediaDetailsModel';
 import MediaGrid from './MediaGrid';
+import MediaLibraryFilters from './MediaLibraryFilters';
+import MediaLibraryModel from './MediaLibraryModel';
 
-class MediaLibraryModel {
-    @observable contents: Content[] = [];
-    @observable selectedContent: Content = null;
-}
-
-interface OwnProps {}
-interface OwnState {
+interface OwnProps {
     model: MediaLibraryModel;
 }
+interface OwnState {}
 
 @observer
-export default class MediaLibrary extends React.Component<OwnProps, OwnState> {
-    readonly state: OwnState = {
-        model: new MediaLibraryModel()
-    };
-
-    get model() {
-        return this.state.model;
-    }
-
-    async componentDidMount() {
-        this.model.contents = await Application.tenant.content.getByContentTypeAsync(2);
-    }
+export default class MediaLibraryView extends React.Component<OwnProps, OwnState> {
+    readonly details = new MediaDetailsModel(this.props.model);
 
     render() {
-        const { model } = this;
+        const { model } = this.props;
         return (
             <div className='mediaLibrary'>
                 <PageHeader actionBar={this.renderActionBar()} title='Media Library' />
-                <MediaDragDropUpload />
-                <MediaDetails
-                    content={model.selectedContent}
-                    onClose={this.onDetailClose}
-                    onNext={this.onNextSelected}
-                    onPrevious={this.onPreviousSelected}
-                />
+
+                <MediaDetailsView model={this.details} />
 
                 <div className='row'>
                     <div className='col'>
-                        <MediaGrid contents={model.contents} onSelect={this.onSelectGridItem} />
+                        <MediaGrid contents={model.filters.view} onClick={this.onItemClick} />
                     </div>
                 </div>
             </div>
@@ -55,28 +36,11 @@ export default class MediaLibrary extends React.Component<OwnProps, OwnState> {
     }
 
     @action.bound
-    private onDetailClose() {
-        this.model.selectedContent = null;
-    }
-
-    @action.bound
-    private onNextSelected() {
-        let i = this.model.contents.indexOf(this.model.selectedContent);
-        this.model.selectedContent = this.model.contents[i + 1];
-    }
-
-    @action.bound
-    private onPreviousSelected() {
-        let i = this.model.contents.indexOf(this.model.selectedContent);
-        this.model.selectedContent = this.model.contents[i - 1];
-    }
-
-    @action.bound
-    private onSelectGridItem(content: Content) {
-        this.model.selectedContent = content;
+    private onItemClick(content: IContent) {
+        this.details.setItem(content);
     }
 
     private renderActionBar() {
-        return <span>Drop a file anywhere to upload.</span>;
+        return <MediaLibraryFilters model={this.props.model} />;
     }
 }

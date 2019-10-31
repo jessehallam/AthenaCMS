@@ -1,60 +1,54 @@
-import { observable } from 'mobx';
+import { action } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
+import { StoreProps, withStore } from '../../stores/withStore';
 import { classList } from '../../utility/classList';
-import Application from '../Application';
 import LoginForm from './LoginForm';
+import LoginModel from './model';
 
-export interface LoginModel {
-    username: string;
-    password: string;
-}
-
-interface OwnProps {}
-
+interface OwnProps extends StoreProps {}
 interface OwnState {
     model: LoginModel;
-    visible: boolean;
 }
 
+@observer
 class LoginView extends React.Component<OwnProps, OwnState> {
     readonly state: OwnState = {
-        model: observable({
-            username: '',
-            password: ''
-        }),
-        visible: false
+        model: new LoginModel()
     };
 
     componentDidMount() {
-        Application.tenant.authentication.onAuthenticated.subscribe(() => {
-            this.setState({ visible: false });
-        });
+        // subscribe to auth required events:
+        this.props.store.authentication.onLoginRequired.subscribe(this.onLoginRequired);
+        this.props.store.authentication.onAuthenticated.subscribe(this.onAuthenticated);
 
-        Application.tenant.authentication.onLoginRequired.subscribe(() => {
-            if (this.state.visible) return;
-            this.setState({
-                model: observable({
-                    username: '',
-                    password: ''
-                }),
-                visible: true
-            });
-        });
+        // trigger a loginRequired event if there is no token:
+        this.props.store.authentication.getAccessTokenAsync();
     }
 
     render() {
-        const classes = classList('login', this.state.visible && 'login--visible');
+        const classes = classList('login', this.state.model.visible && 'login--visible');
         return (
             <div className={classes}>
                 <div className='login__aside' />
                 <div className='login__wrapper'>
                     <div className='login__body'>
-                        <LoginForm model={this.state.model} />
+                        <LoginForm model={this.state.model} store={this.props.store} />
                     </div>
                 </div>
             </div>
         );
     }
-}
 
-export default LoginView;
+    private onAuthenticated = action(() => {
+        this.state.model.visible = false;
+    });
+
+    private onLoginRequired = action(() => {
+        if (!this.state.model.visible) {
+            this.state.model.visible = true;
+            this.state.model.reset();
+        }
+    });
+}
+export default withStore(LoginView);

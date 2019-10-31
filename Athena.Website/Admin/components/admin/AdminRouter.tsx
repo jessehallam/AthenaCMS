@@ -1,15 +1,13 @@
+import { observer } from 'mobx-react';
 import * as React from 'react';
-import { Route, Switch } from 'react-router';
-import ContentRouter from '../content/ContentRouter';
-import MediaRouter from '../media/MediaRouter';
-import TaxonomyRouter from '../taxonomy/TaxonomyRouter';
+import { Switch } from 'react-router';
+import { StoreProps, withStore } from '../../stores/withStore';
 
-export default function AdminRouter() {
-    return (
-        <Switch>
-            <Route path='/admin/content' component={ContentRouter} />
-            <Route path='/admin/media' component={MediaRouter} />
-            <Route path='/admin/taxonomy' component={TaxonomyRouter} />
-        </Switch>
-    );
+interface RouterProps extends StoreProps {}
+
+function AdminRouter({ store }: RouterProps) {
+    const routes = store.admin.routes.map((route, i) => React.cloneElement(route, { key: 'route-' + i }));
+    return <Switch>{routes}</Switch>;
 }
+
+export default withStore(observer(AdminRouter));

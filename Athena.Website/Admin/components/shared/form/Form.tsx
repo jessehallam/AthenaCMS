@@ -1,11 +1,13 @@
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
+import * as R from 'ramda';
 import * as React from 'react';
 import { FormContext } from './context';
-import { Control } from './control';
+import { Control } from './Control';
 import Input, { InputConfig } from './Input';
 
 export type ValidationResult = true | Record<string, string>;
+export type InputDecorator = (jsx: JSX.Element) => JSX.Element;
 
 export interface IFormResult<T> {
     data: T;
@@ -47,7 +49,7 @@ export default class Form<T extends {} = any> {
         );
     }
 
-    createInputDecorator(config: InputConfig) {
+    createInputDecorator(config: InputConfig): InputDecorator {
         const control = new Control(config);
         this.controls.push(control);
         return (jsx: JSX.Element): JSX.Element => <Input control={control} element={jsx} />;
@@ -61,10 +63,12 @@ export default class Form<T extends {} = any> {
     @action.bound
     submit(): IFormResult<T> {
         const validation = this.validate();
-        const data: any = {};
+        let data: any = {};
 
         this.controls.forEach(control => {
-            data[control.config.id] = control.value;
+            const path = typeof control.config.id === 'string' ? [control.config.id] : control.config.id;
+            const lens = R.lensPath(path);
+            data = R.set(lens, control.value, data);
         });
         return {
             data,

@@ -26,6 +26,7 @@ export class Control {
 
     reset() {
         this.value = this.config.initialValue;
+        this.validOrError = true;
     }
 
     update(config: Partial<InputConfig>) {}

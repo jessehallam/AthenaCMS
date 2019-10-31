@@ -1,29 +1,29 @@
 import * as React from 'react';
-import { LoginActionType } from './LoginAction';
+import { LoginAction } from './model';
 
-interface OwnProps {
-    action: LoginActionType;
-    onActionChange: (action: LoginActionType) => void;
+interface Props {
+    action: LoginAction;
+    onChange: (action: LoginAction) => void;
 }
 
-export default function LoginActionChange(props: OwnProps) {
-    if (props.action === 'register') {
-        return (
-            <div className='login__signIn'>
-                Already have an account?{' '}
-                <a href='#' onClick={() => props.onActionChange('signin')}>
-                    Sign In
-                </a>
-            </div>
-        );
-    } else if (props.action === 'signin') {
+export default function LoginActionChange(props: Props) {
+    if (props.action === 'login') {
         return (
             <div className='login__signUp'>
                 Don't have an account yet?{' '}
-                <a href='#' onClick={() => props.onActionChange('register')}>
+                <a href='#' onClick={() => props.onChange('register')}>
                     Sign Up
                 </a>
             </div>
         );
-    }
+    } else if (props.action === 'register') {
+        return (
+            <div className='login__signIn'>
+                Already have an account?{' '}
+                <a href='#' onClick={() => props.onChange('login')}>
+                    Sign In
+                </a>
+            </div>
+        );
+    } else throw new Error();
 }

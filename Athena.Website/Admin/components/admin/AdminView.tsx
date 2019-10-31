@@ -1,20 +1,43 @@
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
+import { toggleScrollEvent } from '../../event';
+import { classList } from '../../utility/classList';
 import AdminRouter from './AdminRouter';
-import HeaderPart from './header/HeaderPart';
+import Header from './header/Header';
 
-interface OwnProps {}
-interface OwnState {}
+interface Model {
+    enableScroll: boolean;
+}
 
-export default function AdminView() {
-    return (
-        <div className='adminPanel'>
-            <HeaderPart />
+@observer
+class AdminView extends React.Component {
+    readonly model: Model = observable.object({ enableScroll: true });
 
-            <div className='adminPanel__mainContentBox'>
-                <div className='adminPanel__mainContentWrapper'>
-                    <AdminRouter />
+    componentDidMount() {
+        toggleScrollEvent.subscribe(value => {
+            console.log('toggleScrollEvent:got value', value);
+            this.model.enableScroll = value;
+        });
+    }
+
+    render() {
+        const contentBoxClasses = classList(
+            'admin__mainContentBox',
+            !this.model.enableScroll && 'admin__mainContentBox--disableScroll'
+        );
+        return (
+            <div className='admin'>
+                <Header />
+
+                <div className={contentBoxClasses}>
+                    <div className='admin__mainContentWrapper'>
+                        <AdminRouter />
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
+
+export default AdminView;

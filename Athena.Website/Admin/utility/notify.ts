@@ -1,55 +1,56 @@
-import Noty = require('noty');
-import 'noty/lib/noty.css';
-import 'noty/lib/themes/bootstrap-v4.css';
+import * as Noty from 'noty';
 
-const theme = 'bootstrap-v4';
+require('noty/lib/noty.css');
+require('noty/lib/themes/bootstrap-v4.css');
 
-class NotifyClient {
-    defaults: Noty.Options = {
-        timeout: 2000,
-        theme
-    };
+type ButtonCallback = (noty: Noty) => void;
 
-    error(text: string, config: Noty.Options = {}) {
-        return this.show({
-            ...config,
-            type: 'error',
-            text
-        });
+class Notification {
+    private noty: Noty;
+
+    constructor(private readonly options: Noty.Options) {}
+
+    button(text: string, className: string, callback: ButtonCallback) {
+        this.options.buttons = this.options.buttons || [];
+        this.options.buttons.push(
+            Noty.button(text, className, () => {
+                callback.call(null, this.noty);
+            })
+        );
     }
 
-    show(config: Noty.Options) {
-        new Noty({
-            ...this.defaults,
-            ...config
-        }).show();
-    }
-
-    success(text: string, config: Noty.Options = {}) {
-        return this.show({
-            ...config,
-            type: 'success',
-            text
-        });
+    show() {
+        this.noty = new Noty(this.options);
+        this.noty.show();
     }
 }
 
-export default new NotifyClient();
+class Notify {
+    constructor(private defaults: Noty.Options) {}
 
-// export function error(text: string, config: Noty.Options = {}) {
-//     return show({
-//         text,
-//         ...config
-//     });
-// }
+    create(options: Noty.Options) {
+        return new Notification({ ...this.defaults, ...options });
+    }
 
-// export function show(config: Noty.Options) {
-//     new Noty(config).show();
-// }
+    button(text: string, className: string, callback: Function) {
+        return Noty.button(text, className, callback);
+    }
 
-// export function success(text: string, config: Noty.Options = {}) {
-//     return show({
-//         text,
-//         ...config
-//     });
-// }
+    error(text: string, options?: Noty.Options) {
+        this.show({ ...options, text, type: 'error' });
+    }
+
+    show(options: Noty.Options) {
+        this.create(options).show();
+    }
+
+    success(text: string, options?: Noty.Options) {
+        this.show({ ...options, text, type: 'success' });
+    }
+
+    warning(text: string, options?: Noty.Options) {
+        this.show({ ...options, text, type: 'error' });
+    }
+}
+
+export default new Notify({ timeout: 2000, theme: 'bootstrap-v4' });

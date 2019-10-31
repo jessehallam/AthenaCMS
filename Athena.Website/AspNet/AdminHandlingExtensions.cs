@@ -19,7 +19,7 @@ namespace Athena.Website.AspNet
                 {
                     admin.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                     {
-                        ConfigFile = Path.Combine(hostingEnvironment.ContentRootPath, "Admin2", "webpack", "webpack.config.js"),
+                        ConfigFile = Path.Combine(hostingEnvironment.ContentRootPath, "Admin", "webpack", "webpack.config.js"),
                         EnvironmentVariables = new Dictionary<string, string>
                         {
                             {"NODE_ENV", "development"}

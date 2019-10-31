@@ -1,50 +1,59 @@
-import { action, observable } from 'mobx';
+import { action } from 'mobx';
+import { observer } from 'mobx-react';
 import * as React from 'react';
-import { IContentType } from '../../../ObjectModel/interfaces';
-import Application from '../../Application';
+import { IContentType } from '../../../stores/interfaces';
+import { StoreProps, withStore } from '../../../stores/withStore';
+import notify from '../../../utility/notify';
+import { assignObservable } from '../../../utility/observable';
 import PageHeader from '../../shared/PageHeader';
-import AddContentType from './AddContentType';
-import ContentTypePanel from './ContentTypePanel';
+import ContentTypeListPanel from './ContentTypeListPanel';
+import DeleteDialog from './DeleteDialog';
+import EditContentTypeDrawer from './EditContentTypeDrawer';
+import { ContentHomeModel } from './model';
 
-export interface IViewContentType extends IContentType {
-    recordCount?: number;
-}
-
-interface OwnProps {}
+interface OwnProps extends StoreProps {}
 interface OwnState {
-    contentTypes: IViewContentType[];
-    loading: boolean;
-    showAddDrawer: boolean;
+    model: ContentHomeModel;
 }
 
-export default class ContentHomeView extends React.Component<OwnProps, OwnState> {
+@observer
+class ContentHomeView extends React.Component<OwnProps, OwnState> {
     readonly state: OwnState = {
-        contentTypes: observable.array(),
-        loading: true,
-        showAddDrawer: false
+        model: new ContentHomeModel(this.props.store)
     };
 
-    async componentDidMount() {
-        await this.refreshContentTypes();
-
-        this.setState({
-            loading: false
-        });
+    componentDidMount() {
+        this.state.model.refreshContentTypesAsync();
     }
 
     render() {
+        const { model } = this.state;
+
         return (
-            <div className='contentView'>
+            <div className='contentHome'>
                 <PageHeader actionBar={this.renderActionBar()} title='Content Management' />
-                <AddContentType
-                    isOpen={this.state.showAddDrawer}
-                    onCancel={() => this.setState({ showAddDrawer: false })}
-                    onComplete={this.onContentTypeAdded}
+
+                <EditContentTypeDrawer
+                    entity={model.edit.entity}
+                    onCancel={this.onEditCancel}
+                    onComplete={this.onEditComplete}
+                    visible={model.edit.visible}
+                />
+
+                <DeleteDialog
+                    entity={model.delete.entity}
+                    onClose={this.onDeleteClose}
+                    onConfirm={this.onDeleteConfirm}
+                    visible={model.delete.visible}
                 />
 
                 <div className='row'>
                     <div className='col-7'>
-                        <ContentTypePanel contentTypes={this.state.contentTypes} loading={this.state.loading} />
+                        <ContentTypeListPanel
+                            model={this.state.model}
+                            onDelete={this.onDeleteContentType}
+                            onEdit={this.onEditContentType}
+                        />
                     </div>
                 </div>
             </div>
@@ -52,32 +61,61 @@ export default class ContentHomeView extends React.Component<OwnProps, OwnState>
     }
 
     @action.bound
-    private onContentTypeAdded(contentType: IContentType) {
-        this.refreshContentTypes();
-        this.setState({ showAddDrawer: false });
+    private onAddClick() {
+        const { edit } = this.state.model;
+        edit.entity = { name: '' };
+        edit.visible = true;
     }
 
-    private async refreshContentTypes() {
-        const contentTypes: IViewContentType[] = await Application.tenant.content.getContentTypesAsync();
-        const counts = await Application.tenant.content.getContentCountsAsync();
+    @action.bound
+    private onEditCancel() {
+        const { edit } = this.state.model;
+        edit.visible = false;
+    }
 
-        counts.forEach(count => {
-            contentTypes.find(x => x.id == count.typeId).recordCount = count.total;
-        });
+    @action.bound
+    private onDeleteClose() {
+        this.state.model.delete.visible = false;
+    }
 
-        this.setState({ contentTypes });
+    @action.bound
+    private onDeleteConfirm() {
+        this.state.model.delete.visible = false;
+    }
+
+    @action.bound
+    private onDeleteContentType(contentType: IContentType) {
+        this.state.model.delete.entity = contentType;
+        this.state.model.delete.visible = true;
+    }
+
+    @action.bound
+    private onEditContentType(contentType: IContentType) {
+        const { edit } = this.state.model;
+        edit.entity = contentType;
+        edit.visible = true;
+    }
+
+    @action.bound
+    private onEditComplete(contentType: IContentType) {
+        const { edit } = this.state.model;
+        if (!edit.entity.id) {
+            this.state.model.contentTypes.push(contentType);
+            notify.success('Content type created.');
+        } else {
+            assignObservable(edit.entity, contentType);
+            notify.success('Content type updated.');
+        }
+        edit.visible = false;
     }
 
     private renderActionBar() {
         return [
-            <button
-                className='btn btn-primary'
-                key='add'
-                onClick={e => this.setState({ showAddDrawer: true })}
-                type='button'
-            >
+            <button className='btn btn-primary' key='add' onClick={this.onAddClick} type='button'>
                 Add Content Type
             </button>
         ];
     }
 }
+
+export default withStore(ContentHomeView);

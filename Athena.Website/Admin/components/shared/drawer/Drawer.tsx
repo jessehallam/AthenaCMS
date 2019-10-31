@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { classList } from '../../../utility/classList';
-import Backdrop from '../Backdrop';
+import Backdrop from '../backdrop';
 
 interface OwnProps {
     canClose?: boolean;
@@ -10,6 +10,7 @@ interface OwnProps {
     onClose?: VoidFunction;
     style?: React.CSSProperties;
     title: string;
+    width?: React.ReactText;
 }
 
 interface OwnState {}
@@ -22,9 +23,13 @@ export default class Drawer extends React.Component<OwnProps, OwnState> {
             this.props.isOpen && 'drawer--isOpen',
             this.props.className
         );
+        const style = {
+            ...this.props.style
+        };
+        if (this.props.width) style.width = this.props.width;
 
         return createPortal(
-            <div className={classes} style={this.props.style}>
+            <div className={classes} style={style}>
                 {this.renderBackdrop()}
                 <header className='drawer__header'>
                     <h4 className='drawer__title'>{this.props.title}</h4>
