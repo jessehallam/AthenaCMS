@@ -37,7 +37,7 @@ class Notify {
     }
 
     error(text: string, options?: Noty.Options) {
-        this.show({ ...options, text, type: 'error' });
+        this.show({ timeout: 9000, ...options, text, type: 'error' });
     }
 
     show(options: Noty.Options) {

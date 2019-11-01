@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Athena.Core.Security.Activities;
 using Athena.Data.Context;
@@ -78,7 +79,13 @@ namespace Athena.Website.Controllers
         {
             var entity = data.ContentTypes.Find(model.Id);
 
-            if (entity == null) return NotFound();
+            if (entity == null)
+                return this.Error("E_NOTFOUND", "An entity with that id does not exist.");
+
+            if (!entity.Name.Equals(model.Name, StringComparison.OrdinalIgnoreCase)
+                && data.ContentTypes.Any(x => x.Name == model.Name))
+                return this.Error("E_NAME_UNIQUE", "Name is not unique.");
+
             entity.Name = model.Name;
             data.SaveChanges();
             return Ok(entity);

@@ -1,5 +1,6 @@
 import { action, computed, observable } from 'mobx';
 import { IContentType } from '../../../../stores/interfaces';
+import { isClientError } from '../../../../utility/axios';
 import { delay } from '../../../../utility/delay';
 import notify from '../../../../utility/notify';
 import { assignObservable } from '../../../../utility/observable';
@@ -32,19 +33,28 @@ export default class EditContentTypeModel {
         const operation = this.target.id ? 'update' : 'create';
 
         const wait = delay(1000);
-        const result =
-            operation === 'update'
-                ? await this.base.store.content.updateContentTypeAsync(this.target)
-                : await this.base.store.content.createContentType(this.target);
+        try {
+            const result =
+                operation === 'update'
+                    ? await this.base.store.content.updateContentTypeAsync(this.target)
+                    : await this.base.store.content.createContentType(this.target);
 
-        assignObservable(this.target, result);
-        if (operation === 'create') this.base.contentTypes.push(this.target);
+            assignObservable(this.target, result);
+            if (operation === 'create') this.base.contentTypes.push(this.target);
 
-        this.saving = false;
-        this.visible = false;
+            this.saving = false;
+            this.visible = false;
 
-        notify.success(`Content type ${operation === 'create' ? 'created' : 'saved'}.`);
-        await wait;
+            notify.success(`Content type ${operation === 'create' ? 'created' : 'saved'}.`);
+            await wait;
+        } catch (err) {
+            const response = err.response;
+            if (isClientError(response)) {
+                notify.error(response.data.description);
+            }
+        } finally {
+            this.saving = false;
+        }
     }
 
     @action.bound
